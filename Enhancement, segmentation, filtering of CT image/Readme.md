@@ -1,4 +1,5 @@
 Reproduce & compare three enhancement strategies
+Author Jane Kozz
 
 Visibility vs Noise Tradeoff
 Global histogram equalization increases overall contrast but can also amplify noise in uniform regions. CLAHE improves local contrast while limiting noise using clipping, so it is more stable for medical images. Gamma correction adjusts brightness in a controlled way depending on the gamma value.
