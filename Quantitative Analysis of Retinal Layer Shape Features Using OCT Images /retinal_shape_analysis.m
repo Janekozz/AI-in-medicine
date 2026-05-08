@@ -271,7 +271,7 @@ fprintf('========================================\n');
  
  
  
-Function was adjusted 
+% Function was adjusted 
 function SEPoints = getSEPoints2(curLayerEdges) 
 % Initialize points container 
 SEPoints = zeros(2,2); 
