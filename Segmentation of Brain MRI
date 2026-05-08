@@ -1,0 +1,136 @@
+Multilevel Threshold-Based Segmentation of Brain MRI  
+Author Jane Kozz 
+Problem:  
+To segment 3D brain MRI volume to 4 intensity based regions (gray matter, white matter, CSF 
+and others) using multilevel thresholding in comparison to Otsu’s thresholding method 
+Method: MultiIterative Global Thresholding and Otsu’s Thresholding Methods 
+Results: 
+I got right outputs in the thresholding: 
+Both methods produce 3 thresholds, 4 segmentation regions. The values are very close 
+between methods: - 41 vs 43 - 120 vs 122 - 199 vs 200 
+The histogram now shows three thresholds for both methods. The iterative method produces 
+slightly different threshold values compared to Otsu’s method showing how intensity classes are 
+separated: 
+Discussion: 
+Both methods separated the MRI intensity range into similar regions with only small differences 
+because of different methods of thresholding. A visual comparison shows that the iterative 
+thresholding method separates major intensity regions. And it does match the ground truth 
+approximately (not exactly) 
+The dataset includes ground truth segmentation (labeled).  
+I added visualisation for one slide to see the segmentation. 
+For the slices with segmentation I added colormap “jet” and I got colored segmentation: 
+The iterative thresholding method segmented the MRI into 4 regions 
+The segmentation shows similar structure to the ground truth in separating 4 regions: gray 
+matter, white matter, CSF and other. Some differences appear near boundaries (due to intensity 
+overlap). In comparison the Otsu’s thresholding method shows very close results to iterative 
+thresholding method 
+
+Implemented code: 
+clear; close all; clc; 
+addpath('auxFiles'); 
+%=================================================== 
+% Load input volume 
+load('C:\Users\kozzj\Documents\Project 2\atlas_test_01.mat'); 
+vol = uint8(original); 
+%=================================================== 
+% global thresholding using Otsu's method 
+TO = multithresh(vol(:),3); 
+%===================================================== 
+% global thresholding using iterative thresholding 
+TI = MultiIterativeGlobalThresholding(vol,3); 
+%===================================================== 
+% Use obtained threshold to label the volume 
+segO = imquantize(vol(:),TO); 
+segO = reshape(segO,size(vol)); 
+% 
+segI = imquantize(vol(:),TI); 
+segI = reshape(segI,size(vol)); 
+%===================================================== 
+% Display the threshold values 
+disp(TO); 
+disp(TI); 
+%===================================================== 
+% Visualize the histogram and the obtained threshold 
+% Calculate the image histogram 
+h = imhist(vol(:)); 
+% 
+figure, plot(h,'LineWidth',1.5); 
+yL = get(gca,'YLim'); 
+% Iterative threshols 
+line([TI(1) TI(1)],yL.*.75,'Color','r','LineWidth',1.5); 
+line([TI(2) TI(2)],yL.*.75,'Color','r','LineWidth',1.5); 
+line([TI(3) TI(3)],yL.*.75,'Color','r','LineWidth',1.5); 
+% Otsu's threshold 
+line([TO(1) TO(1)],yL.*.75,'Color','G','LineWidth',1.5); 
+line([TO(2) TO(2)],yL.*.75,'Color','G','LineWidth',1.5); 
+line([TO(3) TO(3)],yL.*.75,'Color','G','LineWidth',1.5); 
+% Title and legend 
+title('Global threshold using Iterative and Otsu''s methods','FontSize', 16); 
+xlabel('Intensity values','FontSize', 14); % x-axis label 
+ylabel('number of pixels/volxels','FontSize', 14); % y-axis label 
+legend('Histogram ','Iterative Threshold','','', 'Otsu''s Threshold', 
+'FontSize', 12); 
+%Visualisation 
+slice = 25; % any slice 
+figure; 
+subplot(2,2,1) 
+imshow(vol(:,:,slice), []) 
+colormap gray 
+colorbar 
+title('Original MRI') 
+subplot(2,2,2) 
+imshow(labeled(:,:,slice), []) 
+colormap(gca, 'jet') 
+colorbar 
+title('Ground Truth') 
+subplot(2,2,3) 
+imshow(segI(:,:,slice), []) 
+colormap(gca, 'jet') 
+colorbar 
+title('Iterative Segmentation') 
+subplot(2,2,4) 
+imshow(segO(:,:,slice), []) 
+colormap(gca, 'jet') 
+colorbar 
+title('Otsu Segmentation') 
+ 
+ 
+And the function: 
+ 
+function [T] = MultiIterativeGlobalThresholding(volume, N, volMask) 
+if (nargin ==2) 
+   volMask = ones(size(volume)); 
+end 
+volumeVoxels = double(volume(volMask==1)); 
+minV = min(volumeVoxels(:)); 
+maxV = max(volumeVoxels(:)); 
+T = linspace(minV, maxV, N+2); 
+T = T(2:end-1); 
+while(true) 
+   Told = T; 
+   classMeans = zeros(1,N+1); 
+   for i = 1:N+1 
+       if i == 1 
+           mask = (volume <= T(1)) & (volMask == 1); 
+       elseif i == N+1 
+           mask = (volume > T(N)) & (volMask == 1); 
+       else 
+           mask = (volume > T(i-1) & volume <= T(i)) & (volMask == 1); 
+       end 
+       if any(mask(:)) 
+           classMeans(i) = mean(volume(mask)); 
+       else 
+           classMeans(i) = 0; 
+end 
+end 
+for i = 1:N 
+T(i) = (classMeans(i) + classMeans(i+1)) / 2; 
+end 
+if all(abs(T - Told) < 0.5) 
+break 
+end 
+% T1 = T1new; 
+% T2 = T2new; 
+end 
+% T = [T1,T2]; 
+end 
