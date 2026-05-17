@@ -187,9 +187,7 @@ fprintf('========================================\n');
 % Step 4: Tortuosity Estimation 
 % Tuning parameter (fixed Euclidean test distance) 
 tstDistance = 50; 
-% Assume: 
-% tissue = binary mask of the selected retinal layer 
-% Extract 1-pixel-wide boundary curve 
+
 curveImg = false(r,c); 
 for j = 1:c 
 rows = find(tissue(:,j)); 
@@ -268,7 +266,6 @@ fprintf('Geodesic distance = %.2f pixels\n', geoDist);
 fprintf('Euclidean distance = %.2f pixels\n', eucDist); 
 fprintf('Tortuosity = %.6f\n', tourValue); 
 fprintf('========================================\n'); 
- 
  
  
 % Function was adjusted 
