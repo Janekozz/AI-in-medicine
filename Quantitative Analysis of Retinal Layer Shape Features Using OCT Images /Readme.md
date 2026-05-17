@@ -98,4 +98,3 @@ not too much. This is consistent with the natural shape of retinal layers in OCT
 Overall the implemented algorithms successfully extracted all required features of the retinal 
 layer and provided quantitative measurements of the structure
 
-title('Original OCT Image', 'FontSize', 13, 'FontWeight', 'bold')
