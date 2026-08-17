@@ -7,3 +7,15 @@ Methods: Color fundus photographs from the publicly available ODIR-5K dataset we
 Results: The model using vascular biomarkers alone achieved 77.09% accuracy, 93.71% recall, and an F1-score of 86.73%. After adding radiomic features, accuracy increased to 78.21%, recall to 97.20%, and F1-score to 87.70%. The model showed high sensitivity for abnormal retinal images but substantially lower performance for the minority Normal class. SMOTE improved minority-class detection but reduced overall performance.
 
 Conclusion: Combining retinal vascular biomarkers with radiomic features improved classification performance compared with vascular features alone. The results demonstrate the feasibility of an interpretable retinal-image analysis pipeline and provide a methodological foundation for future studies investigating retinal vascular biomarkers for systemic and cardiovascular risk assessment
+
+The long-term goal is to investigate retinal vascular biomarkers as non-invasive markers of systemic cardiovascular health, including:
+
+- cardiovascular risk prediction from fundus/OCTA biomarkers;
+- integration with de-identified clinical variables;
+- longitudinal retinal imaging;
+- non-invasive monitoring of vascular changes associated with sustained exercise and cardiovascular improvement.
+
+Author:
+Jane Kozz
+M.S. Artificial Intelligence in Medicine
+University of Louisville
